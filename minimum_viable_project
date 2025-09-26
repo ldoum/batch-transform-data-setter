@@ -1,0 +1,141 @@
+import bpy, math
+
+
+def set_transform_lock_to_obj_euler(item, lock_axis_id, set_lock_bool):
+        
+    match(lock_axis_id):
+        
+        case 1: #option 1
+            item.lock_location[0] = set_lock_bool
+              
+        case 2: #option 2
+            item.lock_location[1] = set_lock_bool
+
+        case 3: #option 3
+            item.lock_location[2] = set_lock_bool
+            
+        case 4: #option 4
+            item.lock_rotation[0] = set_lock_bool
+                  
+        case 5: #option 5
+            item.lock_rotation[1] = set_lock_bool
+                  
+        case 6: #option 6
+            item.lock_rotation[2] = set_lock_bool
+                   
+        case 7: #option 7
+            item.lock_scale[0] = set_lock_bool
+                
+        case 8: #option 8
+            item.lock_scale[1] = set_lock_bool
+                
+        case 9: #option 9
+            item.lock_scale[2] = set_lock_bool
+                
+        case 10: #option 10
+            item.lock_location = (set_lock_bool, set_lock_bool, set_lock_bool)
+                
+        case 11: #option 11
+            item.lock_rotation = (set_lock_bool, set_lock_bool, set_lock_bool)
+                
+        case 12: #option 12
+            item.lock_scale = (set_lock_bool, set_lock_bool, set_lock_bool)
+                
+        case 13: #option 13
+            item.lock_location = (set_lock_bool, set_lock_bool, set_lock_bool)
+            item.lock_rotation = (set_lock_bool, set_lock_bool, set_lock_bool)
+            item.lock_scale = (set_lock_bool, set_lock_bool, set_lock_bool)             
+        case _:
+            pass
+
+
+def set_coordinate_euler_for_obj(item, trans_axis):
+    
+    for unit in trans_axis:
+        
+        match(unit["axis"].upper()):
+            
+            case 'A': #option 1
+                item.location[0] = unit["value"]
+                    
+            case 'B': #option 2
+                item.location[1] = unit["value"]
+                
+            case 'C': #option 3
+                item.location[2] = unit["value"]
+                
+            case 'D': #option 4
+                item.rotation_euler[0] = math.radians(unit["value"])
+                
+            case 'E': #option 5
+                item.rotation_euler[1] = math.radians(unit["value"])
+                
+            case 'F': #option 6
+                item.rotation_euler[2] = math.radians(unit["value"])  
+                                        
+            case 'G': #option 7
+                item.scale[0] = unit["value"]
+                
+            case 'H': #option 8
+                item.scale[1] = unit["value"]
+                
+            case 'I': #option 9
+                item.scale[2] = unit["value"]
+                
+            case _:
+                pass
+    
+            
+def set_rotation_mode_for_obj(item, rot_mode):
+  
+    match(rotation_id.lower()):
+        
+        case 'xyz': #option 1
+            item.rotation_mode = 'XYZ'
+              
+        case 'xzy': #option 2
+            item.rotation_mode = 'XZY'
+
+        case 'yxz': #option 3
+            item.rotation_mode = 'YXZ'
+            
+        case 'yzx': #option 4
+            item.rotation_mode = 'YZX'
+                  
+        case 'zxy': #option 5
+            item.rotation_mode = 'ZXY'
+                  
+        case 'zyx': #option 6
+            item.rotation_mode = 'ZYX'
+                   
+        case 'quaternion': #option 7
+            item.rotation_mode = 'QUATERNION'
+                 
+        case _:
+            pass
+
+
+def select_option(code):
+    
+    for every in bpy.context.selected_objects:
+        match(code):
+            
+            case 1:
+                set_rotation_mode_for_obj(every, 'xyz')
+            
+            case 2:
+                lock_them = [10,12,4,6]
+            
+                for freeze in lock_them:
+                    set_transform_lock_to_obj_euler(every, freeze, True)
+                
+            case 3:
+                coords = [{"axis": "a", "value": 0}]
+             
+                set_coordinate_euler_for_obj(every, coords)
+                
+            case _:
+                pass
+        
+
+select_option(3) #start
