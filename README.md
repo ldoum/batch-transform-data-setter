@@ -6,10 +6,9 @@ Sets new data for N objects of any type
 ## features
 1. Apply axis lock
 2. Set rotation mode 
-3. Set new value for axis property
+3. Set new value for any axis property in euler or quaternion
 
 ## limitations
-1. Can only handle Euler rotation modes
 2. Can't be used to define transform data for armature bones.
 
    
