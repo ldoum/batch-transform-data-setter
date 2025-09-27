@@ -85,7 +85,46 @@ def set_coordinate_euler_for_obj(item, trans_axis):
             case _:
                 pass
     
+def set_coordinate_quaternion_for_obj(item, trans_axis):
+    
+    for unit in trans_axis:
+        
+        match(unit["axis"].upper()):
             
+            case 'A': #option 1
+                item.location[0] = unit["value"]
+                    
+            case 'B': #option 2
+                item.location[1] = unit["value"]
+                
+            case 'C': #option 3
+                item.location[2] = unit["value"]
+                
+            case 'D': #option 4
+                item.rotation_quaternion[0] = unit["value"]
+                
+            case 'E': #option 5
+                item.rotation_quaternion[1] = unit["value"]
+                
+            case 'F': #option 6
+                item.rotation_quaternion[2] = unit["value"]
+                
+            case 'G': #option 7
+                item.rotation_quaternion[3] = unit["value"]     
+                                        
+            case 'H': #option 8
+                item.scale[0] = unit["value"]
+                
+            case 'I': #option 9
+                item.scale[1] = unit["value"]
+                
+            case 'J': #option 10
+                item.scale[2] = unit["value"]
+                
+            case _:
+                pass
+
+
 def set_rotation_mode_for_obj(item, rot_mode):
   
     match(rotation_id.lower()):
@@ -130,10 +169,18 @@ def select_option(code):
                     set_transform_lock_to_obj_euler(every, freeze, True)
                 
             case 3:
-                coords = [{"axis": "a", "value": 0}]
+                 
+                if every.rotation_mode != 'QUATERNION':
+                    
+                    coords = [{"axis": "a", "value": 0}]
              
-                set_coordinate_euler_for_obj(every, coords)
-                
+                    set_coordinate_euler_for_obj(every, coords)
+                    
+                else:
+                    
+                    coords4 = [{"axis": "d", "value": 1}]
+             
+                    set_coordinate_quaternion_for_obj(every, coords4)
             case _:
                 pass
         
