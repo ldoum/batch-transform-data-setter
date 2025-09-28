@@ -127,7 +127,7 @@ def set_coordinate_quaternion_for_obj(item, trans_axis):
 
 def set_rotation_mode_for_obj(item, rot_mode):
   
-    match(rotation_id.lower()):
+    match(rot_mode.lower()):
         
         case 'xyz': #option 1
             item.rotation_mode = 'XYZ'
