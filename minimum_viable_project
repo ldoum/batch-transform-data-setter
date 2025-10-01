@@ -1,133 +1,30 @@
 import bpy, math
 
 
-def set_transform_lock_to_obj_euler(item, lock_axis_id, set_lock_bool):
+def set_transform_lock_to_obj(item, info):
         
-    match(lock_axis_id):
+    item.lock_location = info["lock"][0]
+    item.lock_rotation = info["lock"][1]
+    item.lock_scale = info["lock"][2]
         
-        case 1: #option 1
-            item.lock_location[0] = set_lock_bool
-              
-        case 2: #option 2
-            item.lock_location[1] = set_lock_bool
 
-        case 3: #option 3
-            item.lock_location[2] = set_lock_bool
-            
-        case 4: #option 4
-            item.lock_rotation[0] = set_lock_bool
-                  
-        case 5: #option 5
-            item.lock_rotation[1] = set_lock_bool
-                  
-        case 6: #option 6
-            item.lock_rotation[2] = set_lock_bool
-                   
-        case 7: #option 7
-            item.lock_scale[0] = set_lock_bool
-                
-        case 8: #option 8
-            item.lock_scale[1] = set_lock_bool
-                
-        case 9: #option 9
-            item.lock_scale[2] = set_lock_bool
-                
-        case 10: #option 10
-            item.lock_location = (set_lock_bool, set_lock_bool, set_lock_bool)
-                
-        case 11: #option 11
-            item.lock_rotation = (set_lock_bool, set_lock_bool, set_lock_bool)
-                
-        case 12: #option 12
-            item.lock_scale = (set_lock_bool, set_lock_bool, set_lock_bool)
-                
-        case 13: #option 13
-            item.lock_location = (set_lock_bool, set_lock_bool, set_lock_bool)
-            item.lock_rotation = (set_lock_bool, set_lock_bool, set_lock_bool)
-            item.lock_scale = (set_lock_bool, set_lock_bool, set_lock_bool)             
-        case _:
-            pass
-
-
-def set_coordinate_euler_for_obj(item, trans_axis):
+def set_coordinate_euler_for_obj(item, info):
     
-    for unit in trans_axis:
-        
-        match(unit["axis"].upper()):
-            
-            case 'A': #option 1
-                item.location[0] = unit["value"]
-                    
-            case 'B': #option 2
-                item.location[1] = unit["value"]
-                
-            case 'C': #option 3
-                item.location[2] = unit["value"]
-                
-            case 'D': #option 4
-                item.rotation_euler[0] = math.radians(unit["value"])
-                
-            case 'E': #option 5
-                item.rotation_euler[1] = math.radians(unit["value"])
-                
-            case 'F': #option 6
-                item.rotation_euler[2] = math.radians(unit["value"])  
-                                        
-            case 'G': #option 7
-                item.scale[0] = unit["value"]
-                
-            case 'H': #option 8
-                item.scale[1] = unit["value"]
-                
-            case 'I': #option 9
-                item.scale[2] = unit["value"]
-                
-            case _:
-                pass
-    
-def set_coordinate_quaternion_for_obj(item, trans_axis):
-    
-    for unit in trans_axis:
-        
-        match(unit["axis"].upper()):
-            
-            case 'A': #option 1
-                item.location[0] = unit["value"]
-                    
-            case 'B': #option 2
-                item.location[1] = unit["value"]
-                
-            case 'C': #option 3
-                item.location[2] = unit["value"]
-                
-            case 'D': #option 4
-                item.rotation_quaternion[0] = unit["value"]
-                
-            case 'E': #option 5
-                item.rotation_quaternion[1] = unit["value"]
-                
-            case 'F': #option 6
-                item.rotation_quaternion[2] = unit["value"]
-                
-            case 'G': #option 7
-                item.rotation_quaternion[3] = unit["value"]     
-                                        
-            case 'H': #option 8
-                item.scale[0] = unit["value"]
-                
-            case 'I': #option 9
-                item.scale[1] = unit["value"]
-                
-            case 'J': #option 10
-                item.scale[2] = unit["value"]
-                
-            case _:
-                pass
+    item.location = info["euler"][0]
+    item.rotation_euler = info["euler"][1]
+    item.scale = info["euler"][2]
+             
 
+def set_coordinate_quaternion_for_obj(item, info):
+   
+    item.location = info["quaternion"][0]
+    item.rotation_quaternion = info["quaternion"][1]
+    item.scale = info["quaternion"][2] 
 
-def set_rotation_mode_for_obj(item, rot_mode):
+    
+def set_rotation_mode_for_obj(item, info):
   
-    match(rot_mode.lower()):
+    match(info["rot_mode"].lower()):
         
         case 'xyz': #option 1
             item.rotation_mode = 'XYZ'
@@ -153,36 +50,66 @@ def set_rotation_mode_for_obj(item, rot_mode):
         case _:
             pass
 
+#default mode
+default = {
+        
+    "lock": [
+        (False,False,False),
+        (False,False,False),
+        (False,False,False)
+        ],
+    "rot_mode": "XYZ",
+    "euler": [
+        (0.0,0.0,0.0),
+        (0.0,0.0,0.0),
+        (1,1,1)
+        ],
+    "quaternion": [
+        (0.0,0.0,0.0),
+        (0.0,0.0,0.0,0.0),
+        (1,1,1)
+        ]
+}
 
-def select_option(code):
+
+def select_option():
     
     for every in bpy.context.selected_objects:
-        match(code):
-            
-            case 1:
-                set_rotation_mode_for_obj(every, 'xyz')
-            
-            case 2:
-                lock_them = [10,12,4,6]
-            
-                for freeze in lock_them:
-                    set_transform_lock_to_obj_euler(every, freeze, True)
-                
-            case 3:
-                 
-                if every.rotation_mode != 'QUATERNION':
-                    
-                    coords = [{"axis": "a", "value": 0}]
-             
-                    set_coordinate_euler_for_obj(every, coords)
-                    
-                else:
-                    
-                    coords4 = [{"axis": "d", "value": 1}]
-             
-                    set_coordinate_quaternion_for_obj(every, coords4)
-            case _:
-                pass
         
+        #imitate user input toggle
+        default["lock"] = [
+                (False,False,False),
+                (False,False,False),
+                (True,True,True)
+                ] 
+    
+        default["rot_mode"] = "xyz"
+                
+        default["euler"] = [
+                (0.0,0.0,0.0),
+                (math.radians(0.0),math.radians(0.0),math.radians(0.0)),
+                (1,1,1)
+                ]
+        
+        default["quaternion"] = [
+                (0.0,0.0,0.0),
+                (1,0,0,0),
+                (1,1,1)
+                ]
+        #end input
+        
+        set_transform_lock_to_obj(every, default)
+         
+        set_rotation_mode_for_obj(every, default)
+            
+        if every.rotation_mode != 'QUATERNION':
+                
+            set_coordinate_euler_for_obj(every, default)
+                    
+        else:
+                 
+            set_coordinate_quaternion_for_obj(every, default)
+             
+                
+select_option()
 
-select_option(3) #start
